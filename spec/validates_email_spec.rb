@@ -69,7 +69,8 @@ describe EmailValidator do
         'invali d@example.com',
         'invalidexample.com',
         'invalid@example.',
-        'чебурашка@kremlin.ru'
+        'чебурашка@kremlin.ru',
+        'invalid++email@example.com'
       ].each do |email|
         person = Person.new(:primary_email => email)
         person.should_not be_valid(email)

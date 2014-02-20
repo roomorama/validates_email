@@ -7,7 +7,7 @@ class EmailValidator < ActiveModel::EachValidator
   end if RUBY_VERSION.to_f < 1.9
 
   LocalPartSpecialChars = Regexp.escape('!#$%&\'*-/=?+-^_`{|}~')
-  LocalPartUnquoted = '(([[:alnum:]' + LocalPartSpecialChars + ']+[\.\+]+))*[[:alnum:]' + LocalPartSpecialChars + '+]+'
+  LocalPartUnquoted = '([a-z0-9' + LocalPartSpecialChars + '])?([a-z0-9]+([' + LocalPartSpecialChars + '\.\+])?)*[a-z0-9-_]'
   LocalPartQuoted = '\"(([[:alnum:]' + LocalPartSpecialChars + '\.\+]*|(\\\\[\x00-\xFF]))*)\"'
   Regex = Regexp.new('^((' + LocalPartUnquoted + ')|(' + LocalPartQuoted + ')+)@(((\w+\-+[^_])|(\w+\.[^_]))*([a-z0-9-]{1,63})\.[a-z]{2,6}(?:\.[a-z]{2,6})?$)', Regexp::EXTENDED | Regexp::IGNORECASE, 'n')
 
@@ -22,6 +22,9 @@ class EmailValidator < ActiveModel::EachValidator
   #
   def validate_each(record, attribute, value)
     if validates_email_format(value)
+      if options[:mailgun] && ENV['MAILGUN_PUBLIC_KEY'].present? && !validates_email_with_mailgun(value)
+        record.errors[attribute] << (options[:mailgun_message] || I18n.t(:invalid, :scope => [:activerecord, :errors, :messages]))
+      end
       if options[:mx] && !validates_email_domain(value, options[:mx])
         record.errors[attribute] << (options[:mx_message] || I18n.t(:mx_invalid, :scope => [:activerecord, :errors, :messages]))
       end
@@ -74,6 +77,14 @@ class EmailValidator < ActiveModel::EachValidator
       @mx.push(*dns.getresources(domain, Resolv::DNS::Resource::IN::A)) if a_fallback
     end
     @mx.size > 0 ? true : false
+  end
+  
+  def validates_email_with_mailgun(email)
+    require 'rest_client'
+    res = RestClient.get "https://api:#{ENV['MAILGUN_PUBLIC_KEY']}@api.mailgun.net/v2/address/validate", {params: {address: value}}
+    parsed = JSON.parse(res)
+    is_valid = !parsed["is_valid"].nil? ? parsed["is_valid"] : false
+    is_valid
   end
 
 end
