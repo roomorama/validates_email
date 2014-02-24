@@ -79,9 +79,9 @@ describe EmailValidator do
 
     it "doesn't raise exception for emails with UTF-8 characters" do
       person = Person.new(:primary_email => 'чебурашка@kremlin.ru')
-      lambda {
+      expect {
         person.valid?
-      }.should_not raise_error(EmailValidator::Encoding::CompatibilityError)
+      }.not_to raise_error
     end
 
     # From http://tools.ietf.org/html/rfc3696, page 5
