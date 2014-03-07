@@ -40,3 +40,10 @@ class PersonProcMX < GenericPerson
   validates :primary_email,
     :email => { :mx => Proc.new{|person| person.with_mx_validation }}
 end
+
+class PersonProcMXA < GenericPerson
+  attr_accessor :with_mx_validation
+
+  validates :primary_email,
+            :email => { :mx => { :if => Proc.new{|person| person.with_mx_validation }, :a_fallback => true } }
+end

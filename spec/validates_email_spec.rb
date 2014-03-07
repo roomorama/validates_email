@@ -182,4 +182,32 @@ describe EmailValidator do
     end
   end
 
+  context "with proc-based MX validation with fallback to A" do
+    it "allows valid email" do
+      email = "test@gmail.com"
+      person = PersonProcMXA.new(:primary_email => email)
+      person.should be_valid(email)
+    end
+
+    it "allows valid email with fallback to A" do
+      email = "test@example.com"
+      person = PersonMXA.new(:primary_email => email)
+      person.should be_valid(email)
+    end
+
+    it "allows invalid email if proc evaluates to false" do
+      email = "test@exampledoesnotexist.com"
+      person = PersonProcMXA.new(:primary_email => email)
+      person.with_mx_validation = false
+      person.should be_valid(email)
+    end
+
+    it "does not allow invalid email if proc evaluates to true" do
+      email = "test@exampledoesnotexist.com"
+      person = PersonProcMX.new(:primary_email => email)
+      person.with_mx_validation = true
+      person.should_not be_valid(email)
+    end
+  end
+
 end
