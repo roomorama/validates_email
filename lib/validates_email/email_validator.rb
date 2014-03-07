@@ -23,13 +23,13 @@ class EmailValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     if validates_email_format(value)
       if options[:mailgun] && ENV['MAILGUN_PUBLIC_KEY'].present? && !validates_email_with_mailgun(value)
-        record.errors[attribute] << (options[:mailgun_message] || I18n.t(:invalid, :scope => [:activerecord, :errors, :messages]))
+        record.errors.add(attribute, options[:mailgun_message] || :invalid)
       end
       if options[:mx] && !validates_email_domain(value, options[:mx])
-        record.errors[attribute] << (options[:mx_message] || I18n.t(:mx_invalid, :scope => [:activerecord, :errors, :messages]))
+        record.errors.add(attribute, options[:mx_message] || :mx_invalid)
       end
     else
-      record.errors[attribute] << (options[:message] || I18n.t(:invalid, :scope => [:activerecord, :errors, :messages]))
+      record.errors.add(attribute, options[:message] || :invalid)
     end
   end
 
