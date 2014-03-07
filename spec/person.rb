@@ -33,3 +33,10 @@ class PersonMXMessage < GenericPerson
             :email => { :mx => true,
                         :mx_message => 'fails with custom mx message'}
 end
+
+class PersonProcMX < GenericPerson
+  attr_accessor :with_mx_validation
+
+  validates :primary_email,
+    :email => { :mx => Proc.new{|person| person.with_mx_validation }}
+end
