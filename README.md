@@ -1,23 +1,21 @@
 [![Gem
-Version](https://badge.fury.io/rb/spectator-validates_email.png)](http://badge.fury.io/rb/spectator-validates_email)
+Version](https://badge.fury.io/rb/roomorama-validates_email.png)](http://badge.fury.io/rb/roomorama-validates_email)
 [![Build
-Status](https://secure.travis-ci.org/spectator/validates_email.png?branch=master)](http://travis-ci.org/spectator/validates_email)
+Status](https://secure.travis-ci.org/roomorama/validates_email.png?branch=master)](http://travis-ci.org/roomorama/validates_email)
 [![Dependency
-Status](https://gemnasium.com/spectator/validates_email.png?travis)](https://gemnasium.com/spectator/validates_email)
+Status](https://gemnasium.com/roomorama/validates_email.png?travis)](https://gemnasium.com/roomorama/validates_email)
 
 validates_email
 ===============
 
-validates_email is a Rails plugin that validates email addresses against RFC 2822 and RFC 3696
+validates_email is a Rails gem that validates email addresses against RFC 2822 and RFC 3696
 
 Installation
 ------------
 
-    rails plugin install git://github.com/spectator/validates_email.git
+  Add the following to your gemfile
 
-or
-
-    gem 'spectator-validates_email', :require => 'validates_email'
+    gem 'roomorama-validates_email', :require => 'validates_email'
 
 Usage
 -----
@@ -61,6 +59,7 @@ If do check MX Records, then you have to specify your own error message or add i
 Credits
 -------
 
+Based off the spectagor-validates_email gem.
 Most of the code were taken from Alex Dunae (dunae.ca) plugin (see http://github.com/alexdunae/validates_email_format_of/) and adopted for Rails 3 playing around with Rails 3 beta, so pass all beers to him.
 
 Contributors
@@ -99,4 +98,4 @@ Compatible with the following Rails versions:
 * Rails 3.0.x
 * Rails 3.1.x
 * Rails 3.2.1
-* Rails 4 beta 1
+* Rails 4
